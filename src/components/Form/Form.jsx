@@ -9,16 +9,17 @@ import {
 } from "./Form.styles";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addContacts } from "../../redux/phonebook/phonebook-operations";
+import { getContacts } from "../../redux/phonebook/phonebook-selectors";
 import { gsap, Power3 } from "gsap";
 import { useRef } from "react";
 
 function Form() {
   const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   let form = useRef(null);
-
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
 
@@ -60,6 +61,10 @@ function Form() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if (contacts.some((el) => el.name === name)) {
+      alert(` ${name} is already in contacts!`);
+      return;
+    }
     dispatch(addContacts({ name, number }));
 
     resetForm();
